@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: bookstore-db
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: bookuser
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    container_name: bookstore-app
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/bookstore
+      DATABASE_USER: bookuser
+      DATABASE_PASSWORD: password
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
